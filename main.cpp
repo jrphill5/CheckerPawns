@@ -19,13 +19,44 @@ SDL_Event event;
 int main ( int argc, char* args[] )
 {
 
-	if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 ) return 1;
-	SDL_EnableKeyRepeat( 150, 150 );
-    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
-	if ( screen == NULL ) return 2;
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
+	{
+		std::cout << "SDL was unable to initialize!" << "\n";
+		return 1;
+	}
+	const SDL_VideoInfo* info = SDL_GetVideoInfo();
+	std::cout << "Native Resolution: " << info->current_w << "x" << info->current_h << "\n";
+	std::cout << "Window Resolution: " << SCREEN_WIDTH    << "x" << SCREEN_HEIGHT   << "\n";
+	std::cout << "Hardware Surfaces: " << ( info->hw_available ? "yes" : "no" ) << "\n";
+	std::cout << "Window Manager:    " << ( info->wm_available ? "yes" : "no" ) << "\n";
+	if ( SCREEN_WIDTH > info->current_w || SCREEN_HEIGHT > info->current_h )
+	{
+		std::cout << "Window resolution larger than screen resolution!" << "\n";
+		return 2;
+	}
+    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, ( info->hw_available ? SDL_HWSURFACE : SDL_SWSURFACE ) );
+	if ( screen == NULL )
+	{
+		std::cout << "Unable to initialize main window!";
+		return 3;
+	}
+	if ( SDL_EnableKeyRepeat( KEY_REPEAT_DELAY, KEY_REPEAT_INTERVAL ) == -1 || KEY_REPEAT_DELAY == 0 )
+	{
+		std::cout << "Key Repeat:        no" << "\n";
+	}
+	else
+	{
+		std::cout << "Key Repeat:        yes" << "\n";
+		std::cout << " - Delay:          " << KEY_REPEAT_DELAY    << "ms" << "\n";
+		std::cout << " - Interval:       " << KEY_REPEAT_INTERVAL << "ms" << "\n";
+	}
 	tileset = load_image( "tiles.png" );
-	if ( tileset == NULL ) return 3;
-    SDL_WM_SetCaption( "CheckerPawns", NULL );
+	if ( tileset == NULL )
+	{
+		std::cout << "Unable to load sprites!" << "\n";
+		return 4;
+	}
+	if ( info->wm_available ) SDL_WM_SetCaption( "CheckerPawns", NULL );
 
     bool quit = false;
 
@@ -71,7 +102,7 @@ int main ( int argc, char* args[] )
 
 }
 
-SDL_Surface *load_image( std::string filename )
+SDL_Surface* load_image( std::string filename )
 {
 
     SDL_Surface* loadedImage = NULL;
