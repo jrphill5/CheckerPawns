@@ -4,6 +4,7 @@
 #include <string>
 #include "Board.h"
 
+bool init_screen();
 SDL_Surface *load_image( std::string filename );
 void clip_tiles();
 void move_cursor( Board* board, int direction );
@@ -19,53 +20,13 @@ SDL_Event event;
 int main ( int argc, char* args[] )
 {
 
-	if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
-	{
-		std::cout << "SDL was unable to initialize!" << "\n";
-		return 1;
-	}
-	const SDL_VideoInfo* info = SDL_GetVideoInfo();
-	std::cout << "Native Resolution: " << info->current_w << "x" << info->current_h << "\n";
-	std::cout << "Window Resolution: " << SCREEN_WIDTH    << "x" << SCREEN_HEIGHT   << "\n";
-	std::cout << "Bits Per Pixel:    " << SCREEN_BPP << "\n";
-	std::cout << "Hardware Surfaces: " << ( info->hw_available ? "yes" : "no" ) << "\n";
-	std::cout << "Window Manager:    " << ( info->wm_available ? "yes" : "no" ) << "\n";
-	if ( SCREEN_WIDTH > info->current_w || SCREEN_HEIGHT > info->current_h )
-	{
-		std::cout << "Window resolution larger than screen resolution!" << "\n";
-		return 2;
-	}
-    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, ( info->hw_available ? SDL_HWSURFACE : SDL_SWSURFACE ) );
-	if ( screen == NULL )
-	{
-		std::cout << "Unable to initialize main window!";
-		return 3;
-	}
-	if ( SDL_EnableKeyRepeat( KEY_REPEAT_DELAY, KEY_REPEAT_INTERVAL ) == -1 || KEY_REPEAT_DELAY == 0 )
-	{
-		std::cout << "Key Repeat:        no" << "\n";
-	}
-	else
-	{
-		std::cout << "Key Repeat:        yes" << "\n";
-		std::cout << " - Delay:          " << KEY_REPEAT_DELAY    << "ms" << "\n";
-		std::cout << " - Interval:       " << KEY_REPEAT_INTERVAL << "ms" << "\n";
-	}
-	tileset = load_image( "tiles.png" );
-	if ( tileset == NULL )
-	{
-		std::cout << "Unable to load sprites!" << "\n";
-		return 4;
-	}
-	if ( info->wm_available ) SDL_WM_SetCaption( "CheckerPawns", NULL );
+	if ( !init_screen() ) return 1;
 
     bool quit = false;
 
 	Board* board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
 	std::cout << "Board Size:        " << BOARD_WIDTH << "x" << BOARD_HEIGHT << "\n";
 	std::cout << "Player Rows:       " << PIECE_ROWS << "\n";
-
-    clip_tiles();
 
     while ( !quit )
     {
@@ -94,7 +55,7 @@ int main ( int argc, char* args[] )
         if ( SDL_Flip( screen ) == -1 )
 		{
 			std::cout << "Failed to update the screen!" << "\n";
-			return 5;
+			return 2;
 		}
     }
 
@@ -107,6 +68,53 @@ int main ( int argc, char* args[] )
 
 	return 0;
 
+}
+
+bool init_screen()
+{
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
+	{
+		std::cout << "SDL was unable to initialize!" << "\n";
+		return false;
+	}
+	const SDL_VideoInfo* info = SDL_GetVideoInfo();
+	std::cout << "Native Resolution: " << info->current_w << "x" << info->current_h << "\n";
+	std::cout << "Window Resolution: " << SCREEN_WIDTH    << "x" << SCREEN_HEIGHT   << "\n";
+	std::cout << "Bits Per Pixel:    " << SCREEN_BPP << "\n";
+	std::cout << "Hardware Surfaces: " << ( info->hw_available ? "yes" : "no" ) << "\n";
+	std::cout << "Window Manager:    " << ( info->wm_available ? "yes" : "no" ) << "\n";
+	if ( SCREEN_WIDTH > info->current_w || SCREEN_HEIGHT > info->current_h )
+	{
+		std::cout << "Window resolution larger than screen resolution!" << "\n";
+		return false;
+	}
+    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, ( info->hw_available ? SDL_HWSURFACE : SDL_SWSURFACE ) );
+	if ( screen == NULL )
+	{
+		std::cout << "Unable to initialize main window!";
+		return false;
+	}
+	if ( SDL_EnableKeyRepeat( KEY_REPEAT_DELAY, KEY_REPEAT_INTERVAL ) == -1 || KEY_REPEAT_DELAY == 0 )
+	{
+		std::cout << "Key Repeat:        no" << "\n";
+	}
+	else
+	{
+		std::cout << "Key Repeat:        yes" << "\n";
+		std::cout << " - Delay:          " << KEY_REPEAT_DELAY    << "ms" << "\n";
+		std::cout << " - Interval:       " << KEY_REPEAT_INTERVAL << "ms" << "\n";
+	}
+	tileset = load_image( "tiles.png" );
+	if ( tileset == NULL )
+	{
+		std::cout << "Unable to load sprites!" << "\n";
+		return false;
+	}
+	if ( info->wm_available ) SDL_WM_SetCaption( "CheckerPawns", NULL );
+    
+	clip_tiles();
+
+	return true;
 }
 
 SDL_Surface* load_image( std::string filename )
