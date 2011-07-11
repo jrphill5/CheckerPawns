@@ -187,3 +187,16 @@ void Board::choose_tile(int x, int y)
 {
     chosen_tile = new Tile( x*TILE_WIDTH, y*TILE_HEIGHT, TILE_NONE );
 }
+
+int Board::get_tile_count(int type)
+{
+
+	int count = 0;
+
+	for ( int i = 0 ; i < this->width ; i++ )
+		for ( int j = 0 ; j < this->height ; j++ )
+			if ( this->piece_tiles[i][j]->get_type() == type ) count ++;
+
+	return count;
+
+}

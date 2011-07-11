@@ -53,10 +53,11 @@ int main ( int argc, char* args[] )
         board->show(tileset, screen, sprites);
         board->get_selected_tile()->show(tileset, screen, sprites);
         if ( SDL_Flip( screen ) == -1 )
-		{
-			std::cout << "Failed to update the screen!" << "\n";
-			return 2;
-		}
+		{ std::cout << "Failed to update the screen!" << "\n"; return 2; }
+		if ( board->get_tile_count( TILE_RED ) + board->get_tile_count( TILE_RED_KING ) == 0 )
+		{ std::cout << "Green Wins!" << "\n"; return 0; }
+		if ( board->get_tile_count( TILE_GREEN ) + board->get_tile_count( TILE_GREEN_KING ) == 0 )
+		{ std::cout << "Red Wins!" << "\n"; return 0; }
     }
 
     SDL_FreeSurface( tileset );
