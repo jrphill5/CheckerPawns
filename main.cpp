@@ -27,6 +27,7 @@ int main ( int argc, char* args[] )
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();
 	std::cout << "Native Resolution: " << info->current_w << "x" << info->current_h << "\n";
 	std::cout << "Window Resolution: " << SCREEN_WIDTH    << "x" << SCREEN_HEIGHT   << "\n";
+	std::cout << "Bits Per Pixel:    " << SCREEN_BPP << "\n";
 	std::cout << "Hardware Surfaces: " << ( info->hw_available ? "yes" : "no" ) << "\n";
 	std::cout << "Window Manager:    " << ( info->wm_available ? "yes" : "no" ) << "\n";
 	if ( SCREEN_WIDTH > info->current_w || SCREEN_HEIGHT > info->current_h )
@@ -61,6 +62,8 @@ int main ( int argc, char* args[] )
     bool quit = false;
 
 	Board* board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
+	std::cout << "Board Size:        " << BOARD_WIDTH << "x" << BOARD_HEIGHT << "\n";
+	std::cout << "Player Rows:       " << PIECE_ROWS << "\n";
 
     clip_tiles();
 
@@ -88,7 +91,11 @@ int main ( int argc, char* args[] )
 		if ( direction != DIRECTION_NONE ) move_cursor( board, direction );
         board->show(tileset, screen, sprites);
         board->get_selected_tile()->show(tileset, screen, sprites);
-        if ( SDL_Flip( screen ) == -1 ) return 1;
+        if ( SDL_Flip( screen ) == -1 )
+		{
+			std::cout << "Failed to update the screen!" << "\n";
+			return 5;
+		}
     }
 
     SDL_FreeSurface( tileset );
