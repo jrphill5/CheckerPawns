@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-g -lSDL -I/usr/include/X11 -lSDL_image
+CXXFLAGS=-g -lSDL -I/usr/include/X11 -I/usr/include/SDL -lSDL_image
 PROJECT=CheckerPawns
 
 all: main.o Settings.o Tile.o Board.o
