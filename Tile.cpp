@@ -1,15 +1,13 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include "Tile.h"
+#include <iostream>
 
 Tile::Tile( int x, int y, int tile_type )
 {
 
 	settings = Settings::CreateInstance();
-
-    xcoord = x / settings->retrieve("TILE_WIDTH");
-    ycoord = y / settings->retrieve("TILE_HEIGHT");
-
+	xcoord = x; ycoord = y;
     set_type(tile_type);
 
 }
@@ -18,8 +16,10 @@ void Tile::show(SDL_Surface* tileset, SDL_Surface* screen, SDL_Rect clips[])
 {
 
 	SDL_Rect offset;
-	offset.x = xcoord * settings->retrieve("TILE_WIDTH");
-	offset.y = ycoord * settings->retrieve("TILE_HEIGHT");
+	//offset.x = xcoord * settings->retrieve("TILE_WIDTH");
+	//offset.y = ycoord * settings->retrieve("TILE_HEIGHT");
+	offset.x = xcoord * TILE_WIDTH;
+	offset.y = ycoord * TILE_HEIGHT;
 
 	SDL_BlitSurface( tileset, &clips[get_type()], screen, &offset );
 

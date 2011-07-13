@@ -61,10 +61,13 @@ void Settings::parse_settings( vector<string> settingsData )
 		} else cout << "empty line" << endl;
 	}
 
-	void store_settings();
+}
 
-	//for ( map<string, int>::iterator iter = settingsMap.begin() ; iter != settingsMap.end() ; ++iter )
-	//	printf( "%-20s %d\n", iter->first.c_str(), iter->second );
+void Settings::printSettings()
+{
+
+	for ( map<string, int>::iterator iter = settingsMap.begin() ; iter != settingsMap.end() ; ++iter )
+		printf( "%-20s %d\n", iter->first.c_str(), iter->second );
 
 }
 

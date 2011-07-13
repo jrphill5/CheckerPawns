@@ -33,9 +33,9 @@ void Board::reset()
             else if ( j > this->get_height()-settings->retrieve("PIECE_ROWS")-1 ) piece_tile_type = TILE_RED;
             else piece_tile_type = TILE_NONE;
 
-            board_tiles[i][j]    = new Tile( i*TILE_WIDTH, j*TILE_HEIGHT, board_tile_type );
-            piece_tiles[i][j]    = new Tile( i*TILE_WIDTH, j*TILE_HEIGHT, piece_tile_type );
-            possible_moves[i][j] = new Tile( i*TILE_WIDTH, j*TILE_HEIGHT, TILE_NONE );
+            board_tiles[i][j]    = new Tile( i, j, board_tile_type );
+            piece_tiles[i][j]    = new Tile( i, j, piece_tile_type );
+            possible_moves[i][j] = new Tile( i, j, TILE_NONE );
 
         }
 
@@ -187,7 +187,7 @@ void Board::select_tile(int x, int y)
 
 void Board::choose_tile(int x, int y)
 {
-    chosen_tile = new Tile( x*TILE_WIDTH, y*TILE_HEIGHT, TILE_NONE );
+    chosen_tile = new Tile( x, y, TILE_NONE );
 }
 
 int Board::get_tile_count(int type)

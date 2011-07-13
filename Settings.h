@@ -31,6 +31,7 @@ class Settings
 		inline string &trim(string &s);
 	public:
 		const int retrieve( string param );
+		void printSettings();
 		static Settings* CreateInstance();
 		
 };
