@@ -1,6 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 
+#include "Settings.h"
 #include "globals.h"
 
 class Tile
@@ -10,6 +11,7 @@ class Tile
         int type;
         int xcoord;
         int ycoord;
+		Settings* settings;
 
     public:
         Tile( int x, int y, int tile_type );
