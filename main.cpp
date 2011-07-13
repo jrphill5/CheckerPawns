@@ -3,9 +3,10 @@
 #include <iostream>
 #include <string>
 #include "Board.h"
+#include "Settings.h"
 
 bool init_screen();
-SDL_Surface *load_image( std::string filename );
+SDL_Surface* load_image( std::string filename );
 void clip_tiles();
 void move_cursor( Board* board, int direction );
 void choose_tile( Board* board );
@@ -19,6 +20,8 @@ SDL_Event event;
 
 int main ( int argc, char* args[] )
 {
+
+	Settings* settings = new Settings( "settings.txt" );
 
 	if ( !init_screen() ) return 1;
 

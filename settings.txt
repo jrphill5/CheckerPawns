@@ -1,0 +1,5 @@
+PIECE_ROWS=2				# number of rows to be populated with pieces (per player)
+BOARD_WIDTH=8				# number of tiles along width of board
+BOARD_HEIGHT=8              # number of tiles along height of board
+KEY_REPEAT_DELAY=150		# key repeat delay in milliseconds
+KEY_REPEAT_INTERVAL=150		# key repeat interval in milliseconds
