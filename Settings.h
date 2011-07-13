@@ -17,12 +17,11 @@ class Settings
 {
 
 	private:
+		Settings();
+		Settings(Settings const&){};
+		Settings& operator=(Settings const&){};
+		static Settings* pInstance;
 		map<string, int> settingsMap;
-		int PIECE_ROWS;
-		int BOARD_WIDTH;
-		int BOARD_HEIGHT;
-		int KEY_REPEAT_DELAY;
-		int KEY_REPEAT_INTERVAL;
 		vector<string> read_file( string filename );
 		void parse_settings( vector<string> settingsData );
 		vector<string> &explode(const string &s, char delim, vector<string> &elems);
@@ -31,7 +30,8 @@ class Settings
 		inline string &rtrim(string &s);
 		inline string &trim(string &s);
 	public:
-		Settings( string filename );
+		const int retrieve( string param );
+		static Settings* CreateInstance();
 		
 };
 

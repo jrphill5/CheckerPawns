@@ -5,14 +5,17 @@
 #include "Board.h"
 #include "Settings.h"
 
+using namespace std;
+
 bool init_screen();
-SDL_Surface* load_image( std::string filename );
+SDL_Surface* load_image( string filename );
 void clip_tiles();
 void move_cursor( Board* board, int direction );
 void choose_tile( Board* board );
 void set_possible_moves( Board* board, Tile* &chosen_piece );
 void set_jump_moves( Board* board, int color, int captured_xindex, int captured_yindex, int move_xindex, int move_yindex );
 
+Settings* settings;
 SDL_Surface *screen  = NULL;
 SDL_Surface *tileset = NULL;
 SDL_Rect sprites[ TILE_SPRITES ];
@@ -21,15 +24,15 @@ SDL_Event event;
 int main ( int argc, char* args[] )
 {
 
-	Settings* settings = new Settings( "settings.txt" );
+	settings = Settings::CreateInstance(); 
 
 	if ( !init_screen() ) return 1;
 
     bool quit = false;
 
-	Board* board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
-	std::cout << "Board Size:        " << BOARD_WIDTH << "x" << BOARD_HEIGHT << "\n";
-	std::cout << "Player Rows:       " << PIECE_ROWS << "\n";
+	Board* board = new Board( settings->retrieve("BOARD_WIDTH"), settings->retrieve("BOARD_HEIGHT"));
+	cout << "Board Size:        " << settings->retrieve("BOARD_WIDTH") << "x" << settings->retrieve("BOARD_HEIGHT") << "\n";
+	cout << "Player Rows:       " << settings->retrieve("PIECE_ROWS") << "\n";
 
     while ( !quit )
     {
@@ -56,11 +59,11 @@ int main ( int argc, char* args[] )
         board->show(tileset, screen, sprites);
         board->get_selected_tile()->show(tileset, screen, sprites);
         if ( SDL_Flip( screen ) == -1 )
-		{ std::cout << "Failed to update the screen!" << "\n"; return 2; }
+		{ cout << "Failed to update the screen!" << "\n"; return 2; }
 		if ( board->get_tile_count( TILE_RED ) + board->get_tile_count( TILE_RED_KING ) == 0 )
-		{ std::cout << "Green Wins!" << "\n"; return 0; }
+		{ cout << "Green Wins!" << "\n"; return 0; }
 		if ( board->get_tile_count( TILE_GREEN ) + board->get_tile_count( TILE_GREEN_KING ) == 0 )
-		{ std::cout << "Red Wins!" << "\n"; return 0; }
+		{ cout << "Red Wins!" << "\n"; return 0; }
     }
 
     SDL_FreeSurface( tileset );
@@ -78,40 +81,40 @@ bool init_screen()
 {
 	if ( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
 	{
-		std::cout << "SDL was unable to initialize!" << "\n";
+		cout << "SDL was unable to initialize!" << "\n";
 		return false;
 	}
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();
-	std::cout << "Native Resolution: " << info->current_w << "x" << info->current_h << "\n";
-	std::cout << "Window Resolution: " << SCREEN_WIDTH    << "x" << SCREEN_HEIGHT   << "\n";
-	std::cout << "Bits Per Pixel:    " << SCREEN_BPP << "\n";
-	std::cout << "Hardware Surfaces: " << ( info->hw_available ? "yes" : "no" ) << "\n";
-	std::cout << "Window Manager:    " << ( info->wm_available ? "yes" : "no" ) << "\n";
+	cout << "Native Resolution: " << info->current_w << "x" << info->current_h << "\n";
+	cout << "Window Resolution: " << SCREEN_WIDTH    << "x" << SCREEN_HEIGHT   << "\n";
+	cout << "Bits Per Pixel:    " << SCREEN_BPP << "\n";
+	cout << "Hardware Surfaces: " << ( info->hw_available ? "yes" : "no" ) << "\n";
+	cout << "Window Manager:    " << ( info->wm_available ? "yes" : "no" ) << "\n";
 	if ( SCREEN_WIDTH > info->current_w || SCREEN_HEIGHT > info->current_h )
 	{
-		std::cout << "Window resolution larger than screen resolution!" << "\n";
+		cout << "Window resolution larger than screen resolution!" << "\n";
 		return false;
 	}
     screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, ( info->hw_available ? SDL_HWSURFACE : SDL_SWSURFACE ) );
 	if ( screen == NULL )
 	{
-		std::cout << "Unable to initialize main window!";
+		cout << "Unable to initialize main window!";
 		return false;
 	}
-	if ( SDL_EnableKeyRepeat( KEY_REPEAT_DELAY, KEY_REPEAT_INTERVAL ) == -1 || KEY_REPEAT_DELAY == 0 )
+	if ( SDL_EnableKeyRepeat( settings->retrieve("KEY_REPEAT_DELAY"), settings->retrieve("KEY_REPEAT_INTERVAL") ) == -1 || settings->retrieve("KEY_REPEAT_DELAY") == 0 )
 	{
-		std::cout << "Key Repeat:        no" << "\n";
+		cout << "Key Repeat:        no" << "\n";
 	}
 	else
 	{
-		std::cout << "Key Repeat:        yes" << "\n";
-		std::cout << " - Delay:          " << KEY_REPEAT_DELAY    << "ms" << "\n";
-		std::cout << " - Interval:       " << KEY_REPEAT_INTERVAL << "ms" << "\n";
+		cout << "Key Repeat:        yes" << "\n";
+		cout << " - Delay:          " << settings->retrieve("KEY_REPEAT_DELAY")    << "ms" << "\n";
+		cout << " - Interval:       " << settings->retrieve("KEY_REPEAT_INTERVAL") << "ms" << "\n";
 	}
 	tileset = load_image( "tiles.png" );
 	if ( tileset == NULL )
 	{
-		std::cout << "Unable to load sprites!" << "\n";
+		cout << "Unable to load sprites!" << "\n";
 		return false;
 	}
 	if ( info->wm_available ) SDL_WM_SetCaption( "CheckerPawns", NULL );
@@ -121,7 +124,7 @@ bool init_screen()
 	return true;
 }
 
-SDL_Surface* load_image( std::string filename )
+SDL_Surface* load_image( string filename )
 {
 
     SDL_Surface* loadedImage = NULL;

@@ -1,9 +1,17 @@
 #include "Settings.h"
 
-Settings::Settings( string filename )
+Settings* Settings::pInstance = NULL;
+
+Settings* Settings::CreateInstance()
+{
+	if (!pInstance) pInstance = new Settings();
+	return pInstance;
+}
+
+Settings::Settings()
 {
 
-	parse_settings( read_file( filename ) );
+	parse_settings( read_file( "settings.txt" ) );
 
 }
 
@@ -53,8 +61,17 @@ void Settings::parse_settings( vector<string> settingsData )
 		} else cout << "empty line" << endl;
 	}
 
+	void store_settings();
+
 	//for ( map<string, int>::iterator iter = settingsMap.begin() ; iter != settingsMap.end() ; ++iter )
 	//	printf( "%-20s %d\n", iter->first.c_str(), iter->second );
+
+}
+
+const int Settings::retrieve( string param )
+{
+	
+	return settingsMap[ param ];
 
 }
 
