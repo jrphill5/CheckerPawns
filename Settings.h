@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
 #include <functional>
 #include <locale> 
@@ -16,6 +17,7 @@ class Settings
 {
 
 	private:
+		map<string, int> settingsMap;
 		int PIECE_ROWS;
 		int BOARD_WIDTH;
 		int BOARD_HEIGHT;

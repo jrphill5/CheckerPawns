@@ -36,18 +36,25 @@ void Settings::parse_settings( vector<string> settingsData )
 
 	for ( vector<string>::size_type i = 0 ; i < settingsData.size() ; i++ )
 	{
-		cout << "  Line " << i << ": ";
+		cout << "  Line " << i+1 << ": ";
 		vector<string> params = explode( settingsData[i], '#' ); // remove comments
 		if ( params.size() != 0 )
 		{
 			vector<string> parsed = explode( params[0], '=' );    // parse parameters
-			for (vector<string>::size_type j = 0; j < parsed.size(); j++)
+			if ( parsed.size() == 2 )
 			{
-				cout << "'" << trim(parsed[j]) << "' ";
+				string param = trim( parsed[0] );
+				int value = atoi( trim( parsed[1] ).c_str() );
+				settingsMap[ param ] = value;
+				printf( "%-20s %d", param.c_str(), value );
 			}
+			else cout << "syntax error";
 			cout << endl;
-		}
+		} else cout << "empty line" << endl;
 	}
+
+	//for ( map<string, int>::iterator iter = settingsMap.begin() ; iter != settingsMap.end() ; ++iter )
+	//	printf( "%-20s %d\n", iter->first.c_str(), iter->second );
 
 }
 
