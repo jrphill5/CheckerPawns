@@ -4,6 +4,8 @@
 Board::Board( int width, int height )
 {
 
+	settings = Settings::CreateInstance();
+
 	this->width = width;
 	this->height = height;
 
@@ -27,8 +29,8 @@ void Board::reset()
 				? ( ( j % 2 ) ? TILE_BLACK : TILE_WHITE )
 				: ( ( j % 2 ) ? TILE_WHITE : TILE_BLACK );
 
-            if ( j < PIECE_ROWS ) piece_tile_type = TILE_GREEN;
-            else if ( j > this->get_height()-PIECE_ROWS-1 ) piece_tile_type = TILE_RED;
+            if ( j < settings->retrieve("PIECE_ROWS") ) piece_tile_type = TILE_GREEN;
+            else if ( j > this->get_height()-settings->retrieve("PIECE_ROWS")-1 ) piece_tile_type = TILE_RED;
             else piece_tile_type = TILE_NONE;
 
             board_tiles[i][j]    = new Tile( i*TILE_WIDTH, j*TILE_HEIGHT, board_tile_type );

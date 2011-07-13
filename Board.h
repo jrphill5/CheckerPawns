@@ -1,6 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "Settings.h"
 #include "Tile.h"
 
 class Board
@@ -14,6 +15,7 @@ class Board
 		Tile* board_tiles[ BOARD_WIDTH ][ BOARD_HEIGHT ];
 		Tile* piece_tiles[ BOARD_WIDTH ][ BOARD_HEIGHT ];
 		Tile* possible_moves[ BOARD_WIDTH ][ BOARD_HEIGHT ];
+		Settings* settings;
 
 	public:
 		Board(int width, int height);

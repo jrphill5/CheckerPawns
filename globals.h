@@ -1,10 +1,10 @@
+#ifndef GLOBALS_H
+#define GLOBALS_H
+
 /* EDIT THE FOLLOWING SETTINGS IF YOU WISH */
 
-const int PIECE_ROWS           = 2;                    // number of rows to be populated with pieces (per player)
 const int BOARD_WIDTH          = 8;                    // number of tiles along width of board
 const int BOARD_HEIGHT         = BOARD_WIDTH;          // number of tiles along length of board
-const int KEY_REPEAT_INTERVAL  = 150;                  // repeat interval in milliseconds
-const int KEY_REPEAT_DELAY     = KEY_REPEAT_INTERVAL;  // repeat delay in milliseconds
 
 /* BUT LEAVE THESE NEXT SETTINGS ALONE (UNLESS YOU KNOW WHAT YOU ARE DOING */
 
@@ -35,3 +35,4 @@ enum directions_t
 	DIRECTION_RIGHT
 };
 
+#endif
