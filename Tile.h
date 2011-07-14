@@ -3,6 +3,7 @@
 
 #include "Settings.h"
 #include "globals.h"
+#include <vector>
 
 class Tile
 {
@@ -15,7 +16,7 @@ class Tile
 
     public:
         Tile( int x, int y, int tile_type );
-		void show(SDL_Surface* tileset, SDL_Surface* screen, SDL_Rect clips[]);
+		void show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips);
         void set_type( int type );
         int get_type();
 		void set_xcoord( int xcoord );

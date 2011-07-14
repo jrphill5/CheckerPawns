@@ -12,14 +12,12 @@ Tile::Tile( int x, int y, int tile_type )
 
 }
 
-void Tile::show(SDL_Surface* tileset, SDL_Surface* screen, SDL_Rect clips[])
+void Tile::show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips)
 {
 
 	SDL_Rect offset;
-	//offset.x = xcoord * settings->retrieve("TILE_WIDTH");
-	//offset.y = ycoord * settings->retrieve("TILE_HEIGHT");
-	offset.x = xcoord * TILE_WIDTH;
-	offset.y = ycoord * TILE_HEIGHT;
+	offset.x = xcoord * settings->retrieve("TILE_WIDTH");
+	offset.y = ycoord * settings->retrieve("TILE_HEIGHT");
 
 	SDL_BlitSurface( tileset, &clips[get_type()], screen, &offset );
 

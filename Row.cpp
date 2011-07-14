@@ -1,10 +1,10 @@
 #include <SDL/SDL.h>
 #include "Row.h"
 
-Row::Row();
+Row::Row( int size );
 {
 
 	settings = Settings::CreateInstance();
-	this->size = settings->retreive("BOARD_WIDTH");
+	this->size = size;
 
 }

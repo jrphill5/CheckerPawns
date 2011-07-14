@@ -1,5 +1,18 @@
+# feel free to change the values of the following parameters
+
 PIECE_ROWS=2				# number of rows to be populated with pieces (per player)
 BOARD_WIDTH=8				# number of tiles along width of board
 BOARD_HEIGHT=8              # number of tiles along height of board
 KEY_REPEAT_DELAY=150		# key repeat delay in milliseconds
 KEY_REPEAT_INTERVAL=150		# key repeat interval in milliseconds
+
+# but don't mess with these if you don't know what you're doing
+
+TILE_WIDTH=80				# width of each tile in pixels
+TILE_HEIGHT=80				# height of each tile in pixels
+TILE_SPRITES=12				# number of tiles in the tilesheet
+
+#TILE_COUNT=BOARD_WIDTH*BOARD_HEIGHT
+#SCREEN_WIDTH=BOARD_WIDTH*TILE_WIDTH
+#SCREEN_HEIGHT=BOARD_HEIGHT*TILE_HEIGHT
+SCREEN_BPP=32				# bits per pixel for the window

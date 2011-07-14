@@ -9,6 +9,17 @@ Board::Board( int width, int height )
 	this->width = width;
 	this->height = height;
 
+	board_tiles.resize( height );
+	piece_tiles.resize( height );
+	possible_moves.resize( height );
+
+	for ( int i = 0 ; i < height ; i++ )
+	{
+		board_tiles[i].resize( width );
+		piece_tiles[i].resize( width );
+		possible_moves[i].resize( width );
+	}
+
 	this->reset();
 
 }
@@ -72,7 +83,7 @@ void Board::clean()
 	delete chosen_tile;
 }
 
-void Board::show(SDL_Surface* tileset, SDL_Surface* screen, SDL_Rect clips[])
+void Board::show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips)
 {
 	for ( int i = 0 ; i < this->width ; i++ )
 	{
@@ -112,6 +123,11 @@ void Board::capture_piece( Tile* &old_piece, Tile* &new_piece )
 
             int captured_yindex = old_ycoord + j;
 			int captured_xindex = old_xcoord + i;
+
+			if ( captured_xindex < 0 || captured_yindex < 0 ) continue;
+			if ( captured_xindex > settings->retrieve("BOARD_WIDTH")-1 ||
+				captured_yindex > settings->retrieve("BOARD_HEIGHT")-1 ) continue;
+
             int captured_type = piece_tiles[captured_xindex][captured_yindex]->get_type();
 
             if ( ( delta_xcoord == x ) && ( delta_ycoord == y) )

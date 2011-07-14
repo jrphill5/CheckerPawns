@@ -15,16 +15,14 @@ void choose_tile( Board* board );
 void set_possible_moves( Board* board, Tile* &chosen_piece );
 void set_jump_moves( Board* board, int color, int captured_xindex, int captured_yindex, int move_xindex, int move_yindex );
 
-Settings* settings;
+Settings* settings = Settings::CreateInstance();
 SDL_Surface *screen  = NULL;
 SDL_Surface *tileset = NULL;
-SDL_Rect sprites[ TILE_SPRITES ];
+vector<SDL_Rect> sprites;
 SDL_Event event;
 
 int main ( int argc, char* args[] )
 {
-
-	settings = Settings::CreateInstance(); 
 
 	if ( !init_screen() ) return 1;
 
@@ -87,7 +85,7 @@ bool init_screen()
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();
 	cout << "Native Resolution: " << info->current_w << "x" << info->current_h << "\n";
 	cout << "Window Resolution: " << SCREEN_WIDTH    << "x" << SCREEN_HEIGHT   << "\n";
-	cout << "Bits Per Pixel:    " << SCREEN_BPP << "\n";
+	cout << "Bits Per Pixel:    " << settings->retrieve("SCREEN_BPP") << "\n";
 	cout << "Hardware Surfaces: " << ( info->hw_available ? "yes" : "no" ) << "\n";
 	cout << "Window Manager:    " << ( info->wm_available ? "yes" : "no" ) << "\n";
 	if ( SCREEN_WIDTH > info->current_w || SCREEN_HEIGHT > info->current_h )
@@ -95,7 +93,7 @@ bool init_screen()
 		cout << "Window resolution larger than screen resolution!" << "\n";
 		return false;
 	}
-    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, ( info->hw_available ? SDL_HWSURFACE : SDL_SWSURFACE ) );
+    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, settings->retrieve("SCREEN_BPP"), ( info->hw_available ? SDL_HWSURFACE : SDL_SWSURFACE ) );
 	if ( screen == NULL )
 	{
 		cout << "Unable to initialize main window!";
@@ -149,12 +147,13 @@ SDL_Surface* load_image( string filename )
 void clip_tiles()
 {
 
-	for ( int i = 0 ; i < TILE_SPRITES ; i++ )
+	sprites.resize(settings->retrieve("TILE_SPRITES"));
+	for ( int i = 0 ; i < settings->retrieve("TILE_SPRITES") ; i++ )
 	{
-		sprites[i].x = TILE_WIDTH * ( i / 2 );
-		sprites[i].y = ( ( i % 2 ) ? TILE_HEIGHT : 0 );
-		sprites[i].w = TILE_WIDTH;
-		sprites[i].h = TILE_HEIGHT;
+		sprites[i].x = settings->retrieve("TILE_WIDTH") * ( i / 2 );
+		sprites[i].y = ( ( i % 2 ) ? settings->retrieve("TILE_HEIGHT") : 0 );
+		sprites[i].w = settings->retrieve("TILE_WIDTH");
+		sprites[i].h = settings->retrieve("TILE_HEIGHT");
 	}
 
 }

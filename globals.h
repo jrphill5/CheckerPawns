@@ -1,17 +1,9 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-const int BOARD_WIDTH          = 8;                    // number of tiles along width of board
-const int BOARD_HEIGHT         = BOARD_WIDTH;          // number of tiles along length of board
-
-const int TILE_WIDTH    = 80;
-const int TILE_HEIGHT   = 80;
-const int TILE_SPRITES  = 12;
-
 const int TILE_COUNT    = 8/*BOARD_WIDTH*/  * 8/*BOARD_HEIGHT*/;
-const int SCREEN_WIDTH  = 8/*BOARD_WIDTH*/  * TILE_WIDTH;
-const int SCREEN_HEIGHT = 8/*BOARD_HEIGHT*/ * TILE_HEIGHT;
-const int SCREEN_BPP    = 32;
+const int SCREEN_WIDTH  = 8/*BOARD_WIDTH*/  * 80/*TILE_WIDTH*/;
+const int SCREEN_HEIGHT = 8/*BOARD_HEIGHT*/ * 80/*TILE_HEIGHT*/;
 
 enum tiles_t
 {

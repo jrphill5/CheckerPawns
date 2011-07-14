@@ -10,7 +10,7 @@ class Row
 	private:
 		int size;
 	public:
-		Row();
+		Row( int size );
 
 }
 

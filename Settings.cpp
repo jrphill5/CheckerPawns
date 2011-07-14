@@ -56,9 +56,10 @@ void Settings::parse_settings( vector<string> settingsData )
 				settingsMap[ param ] = value;
 				printf( "%-20s %d", param.c_str(), value );
 			}
+			else if ( params.size() == 2 ) cout << "comment";
 			else cout << "syntax error";
-			cout << endl;
-		} else cout << "empty line" << endl;
+		} else cout << "empty line";
+		cout << endl;
 	}
 
 }

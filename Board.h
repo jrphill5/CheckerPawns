@@ -3,6 +3,7 @@
 
 #include "Settings.h"
 #include "Tile.h"
+#include <vector>
 
 class Board
 {
@@ -12,9 +13,9 @@ class Board
 		int height;
 		Tile* selected_tile;
 		Tile* chosen_tile;
-		Tile* board_tiles[ BOARD_WIDTH ][ BOARD_HEIGHT ];
-		Tile* piece_tiles[ BOARD_WIDTH ][ BOARD_HEIGHT ];
-		Tile* possible_moves[ BOARD_WIDTH ][ BOARD_HEIGHT ];
+		vector< vector<Tile*> > board_tiles;
+		vector< vector<Tile*> > piece_tiles;
+		vector< vector<Tile*> > possible_moves;
 		Settings* settings;
 
 	public:
@@ -22,7 +23,7 @@ class Board
 		void clear_possible_moves();
 		void reset();
 		void clean();
-		void show(SDL_Surface* tileset, SDL_Surface* screen, SDL_Rect clips[]);
+		void show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips);
 		void capture_piece( Tile* &old_piece, Tile* &new_piece );
 		int get_width();
 		int get_height();
