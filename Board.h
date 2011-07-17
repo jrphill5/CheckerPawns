@@ -3,7 +3,6 @@
 
 #include "Settings.h"
 #include "Row.h"
-#include "Tile.h"
 #include <vector>
 
 class Board

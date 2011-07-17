@@ -3,6 +3,7 @@
 
 #include "Settings.h"
 #include "Tile.h"
+#include <vector>
 
 class Row
 {
