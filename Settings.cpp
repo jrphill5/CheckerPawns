@@ -12,6 +12,7 @@ Settings::Settings()
 {
 
 	parse_settings( read_file( "settings.txt" ) );
+	generate_screen_params();
 
 }
 
@@ -61,6 +62,16 @@ void Settings::parse_settings( vector<string> settingsData )
 		} else cout << "empty line";
 		cout << endl;
 	}
+
+}
+
+
+void Settings::generate_screen_params()
+{
+
+	settingsMap[ "TILE_COUNT" ] = retrieve( "BOARD_WIDTH" ) * retrieve( "BOARD_HEIGHT" );
+	settingsMap[ "SCREEN_WIDTH" ] = retrieve( "BOARD_WIDTH" ) * retrieve( "TILE_WIDTH" );
+	settingsMap[ "SCREEN_HEIGHT" ] = retrieve( "BOARD_HEIGHT" ) * retrieve( "TILE_HEIGHT" );
 
 }
 

@@ -58,10 +58,7 @@ int main ( int argc, char* args[] )
         board->get_selected_tile()->show(tileset, screen, sprites);
         if ( SDL_Flip( screen ) == -1 )
 		{ cout << "Failed to update the screen!" << "\n"; return 2; }
-		if ( board->get_tile_count( TILE_RED ) + board->get_tile_count( TILE_RED_KING ) == 0 )
-		{ cout << "Green Wins!" << "\n"; return 0; }
-		if ( board->get_tile_count( TILE_GREEN ) + board->get_tile_count( TILE_GREEN_KING ) == 0 )
-		{ cout << "Red Wins!" << "\n"; return 0; }
+		if ( board->check_winner() ) return 0;
     }
 
     SDL_FreeSurface( tileset );
@@ -84,16 +81,16 @@ bool init_screen()
 	}
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();
 	cout << "Native Resolution: " << info->current_w << "x" << info->current_h << "\n";
-	cout << "Window Resolution: " << SCREEN_WIDTH    << "x" << SCREEN_HEIGHT   << "\n";
+	cout << "Window Resolution: " << settings->retrieve("SCREEN_WIDTH") << "x" << settings->retrieve("SCREEN_HEIGHT") << "\n";
 	cout << "Bits Per Pixel:    " << settings->retrieve("SCREEN_BPP") << "\n";
 	cout << "Hardware Surfaces: " << ( info->hw_available ? "yes" : "no" ) << "\n";
 	cout << "Window Manager:    " << ( info->wm_available ? "yes" : "no" ) << "\n";
-	if ( SCREEN_WIDTH > info->current_w || SCREEN_HEIGHT > info->current_h )
+	if ( settings->retrieve("SCREEN_WIDTH") > info->current_w || settings->retrieve("SCREEN_HEIGHT") > info->current_h )
 	{
 		cout << "Window resolution larger than screen resolution!" << "\n";
 		return false;
 	}
-    screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, settings->retrieve("SCREEN_BPP"), ( info->hw_available ? SDL_HWSURFACE : SDL_SWSURFACE ) );
+    screen = SDL_SetVideoMode( settings->retrieve("SCREEN_WIDTH"), settings->retrieve("SCREEN_HEIGHT"), settings->retrieve("SCREEN_BPP"), ( info->hw_available ? SDL_HWSURFACE : SDL_SWSURFACE ) );
 	if ( screen == NULL )
 	{
 		cout << "Unable to initialize main window!";
