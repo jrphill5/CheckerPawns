@@ -2,7 +2,6 @@
 #define TILE_H
 
 #include "Settings.h"
-#include "globals.h"
 #include <vector>
 
 enum tiles_t
