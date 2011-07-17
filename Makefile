@@ -2,8 +2,8 @@ CXX=g++
 CXXFLAGS=-g -lSDL -lSDL_image
 PROJECT=CheckerPawns
 
-all: main.o Settings.o Tile.o Board.o
-	$(CXX) $(CXXFLAGS) main.o Settings.o Tile.o Board.o -o $(PROJECT)
+all: main.o Settings.o Tile.o Row.o Board.o
+	$(CXX) $(CXXFLAGS) main.o Settings.o Tile.o Row.o Board.o -o $(PROJECT)
 
 main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
