@@ -208,7 +208,7 @@ void choose_tile( Board* board )
 
 	for ( int i = 0 ; i < board->get_width() ; i++ )
 	{
-		for ( int j = 0 ; j < board->get_width() ; j++ )
+		for ( int j = 0 ; j < board->get_height() ; j++ )
 		{
 
 			Tile* tile = board->get_piece_tile( i, j );
@@ -315,7 +315,8 @@ void set_possible_moves( Board* board, Tile* &chosen_piece )
 			if ( normal_move_x != -1 && normal_move_y != -1 )
 			{
 
-				set_jump_moves( board, TILE_RED, normal_move_x, normal_move_y, jump_move_x, jump_move_y );
+				if ( jump_move_x != -1 && jump_move_y != -1 )
+					set_jump_moves( board, TILE_RED, normal_move_x, normal_move_y, jump_move_x, jump_move_y );
 				if ( board->get_piece_tile(      normal_move_x, normal_move_y )->get_type() == TILE_NONE )
 					 board->get_possible_moves(  normal_move_x, normal_move_y )->set_type( TILE_RED_POSSIBLE );
 
@@ -340,7 +341,8 @@ void set_possible_moves( Board* board, Tile* &chosen_piece )
 			if ( normal_move_x != -1 && normal_move_y != -1 )
 			{
 
-				set_jump_moves( board, TILE_GREEN, normal_move_x, normal_move_y, jump_move_x, jump_move_y );
+				if ( jump_move_x != -1 && jump_move_y != -1 )
+					set_jump_moves( board, TILE_GREEN, normal_move_x, normal_move_y, jump_move_x, jump_move_y );
 				if ( board->get_piece_tile(        normal_move_x, normal_move_y )->get_type() == TILE_NONE )
 					 board->get_possible_moves(    normal_move_x, normal_move_y )->set_type( TILE_GREEN_POSSIBLE );
 
@@ -359,7 +361,7 @@ void set_jump_moves( Board* board, int color, int captured_xindex, int captured_
 
 	int old_type = board->get_piece_tile( captured_xindex, captured_yindex )->get_type();
 	int new_type = board->get_piece_tile( move_xindex, move_yindex )->get_type();
-
+	
 	if ( ( move_xindex != -1 && move_yindex != -1 ) &&
 	   ( ( old_type == ( ( color == TILE_RED ) ? TILE_GREEN : TILE_RED ) ) ||
 		 ( old_type == ( ( color == TILE_RED ) ? TILE_GREEN_KING : TILE_RED_KING ) ) ) &&
