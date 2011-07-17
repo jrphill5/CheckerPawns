@@ -13,13 +13,6 @@ Board::Board( int width, int height )
 	piece_tiles.resize( height );
 	possible_moves.resize( height );
 
-	for ( int i = 0 ; i < height ; i++ )
-	{
-		board_tiles[i].resize( width );
-		piece_tiles[i].resize( width );
-		possible_moves[i].resize( width );
-	}
-
 	this->reset();
 
 }
@@ -27,30 +20,23 @@ Board::Board( int width, int height )
 void Board::reset()
 {
 
-	for ( int i = 0 ; i < this->width ; i++ )
+	for ( int i = 0 ; i < this->height ; i++ )
 	{
 
-		for ( int j = 0 ; j < this->height ; j++ )
-		{
+		int board_tile_type;
+		int piece_tile_type;
 
-            int board_tile_type;
-            int piece_tile_type;
+		board_tile_type = (i%2) ? TILE_BLACK : TILE_WHITE;
 
-            board_tile_type = ( i % 2 )
-				? ( ( j % 2 ) ? TILE_BLACK : TILE_WHITE )
-				: ( ( j % 2 ) ? TILE_WHITE : TILE_BLACK );
+		if ( i < settings->retrieve("PIECE_ROWS") ) piece_tile_type = TILE_GREEN;
+		else if ( i > this->get_height()-settings->retrieve("PIECE_ROWS")-1 ) piece_tile_type = TILE_RED;
+		else piece_tile_type = TILE_NONE;
 
-            if ( j < settings->retrieve("PIECE_ROWS") ) piece_tile_type = TILE_GREEN;
-            else if ( j > this->get_height()-settings->retrieve("PIECE_ROWS")-1 ) piece_tile_type = TILE_RED;
-            else piece_tile_type = TILE_NONE;
+		board_tiles[i]    = new Row( i, width, board_tile_type );
+		piece_tiles[i]    = new Row( i, width, piece_tile_type );
+		possible_moves[i] = new Row( i, width, TILE_NONE );
 
-            board_tiles[i][j]    = new Tile( i, j, board_tile_type );
-            piece_tiles[i][j]    = new Tile( i, j, piece_tile_type );
-            possible_moves[i][j] = new Tile( i, j, TILE_NONE );
-
-        }
-
-    }
+	}
 
 	select_tile(0,0);
 	choose_tile(-1,-1);
@@ -59,25 +45,17 @@ void Board::reset()
 
 void Board::clear_possible_moves()
 {
-	for ( int i = 0 ; i < this->width ; i ++ )
-	{
-		for ( int j = 0 ; j < this->height ; j ++ )
-		{
-			possible_moves[i][j]->set_type( TILE_NONE );
-		}
-	}
+	for ( int i = 0 ; i < this->height ; i++ )
+		possible_moves[i]->clear();
 }
 
 void Board::clean()
 {
 	for ( int i = 0 ; i < this->width ; i++ )
 	{
-		for ( int j = 0 ; j < this->width ; j++ )
-		{
-			delete board_tiles[i][j];
-			delete piece_tiles[i][j];
-			delete possible_moves[i][j];
-		}
+		delete board_tiles[i];
+		delete piece_tiles[i];
+		delete possible_moves[i];
 	}
 	delete selected_tile;
 	delete chosen_tile;
@@ -85,16 +63,13 @@ void Board::clean()
 
 void Board::show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips)
 {
-	for ( int i = 0 ; i < this->width ; i++ )
+	for ( int i = 0 ; i < this->height ; i++ )
 	{
-		for ( int j = 0 ; j < this->height ; j++ )
-		{
-			board_tiles[i][j]->show(tileset, screen, clips);
-			piece_tiles[i][j]->show(tileset, screen, clips);
-			possible_moves[i][j]->show(tileset, screen, clips);
-			selected_tile->show(tileset, screen, clips);
-			chosen_tile->show(tileset, screen, clips);
-		}
+		board_tiles[i]->show(tileset, screen, clips);
+		piece_tiles[i]->show(tileset, screen, clips);
+		possible_moves[i]->show(tileset, screen, clips);
+		selected_tile->show(tileset, screen, clips);
+		chosen_tile->show(tileset, screen, clips);
 	}
 }
 
@@ -128,7 +103,7 @@ void Board::capture_piece( Tile* &old_piece, Tile* &new_piece )
 			if ( captured_xindex > settings->retrieve("BOARD_WIDTH")-1 ||
 				captured_yindex > settings->retrieve("BOARD_HEIGHT")-1 ) continue;
 
-            int captured_type = piece_tiles[captured_xindex][captured_yindex]->get_type();
+            int captured_type = get_piece_tile(captured_xindex, captured_yindex)->get_type();
 
             if ( ( delta_xcoord == x ) && ( delta_ycoord == y) )
             {
@@ -136,12 +111,12 @@ void Board::capture_piece( Tile* &old_piece, Tile* &new_piece )
                 if ( old_type == TILE_RED || old_type == TILE_RED_KING )
                     if ( ( captured_type != TILE_RED ) && ( captured_type != TILE_RED_KING ) )
                         if ( j == -1 || old_type == TILE_RED_KING )
-                            piece_tiles[captured_xindex][captured_yindex]->set_type( TILE_NONE );
+                            get_piece_tile(captured_xindex, captured_yindex)->set_type( TILE_NONE );
 
                 if ( old_type == TILE_GREEN || old_type == TILE_GREEN_KING )
                     if ( ( captured_type != TILE_GREEN ) && ( captured_type != TILE_GREEN_KING ) )
                         if ( j == 1 || old_type == TILE_GREEN_KING )
-                            piece_tiles[captured_xindex][captured_yindex]->set_type( TILE_NONE );
+                            get_piece_tile(captured_xindex, captured_yindex)->set_type( TILE_NONE );
 
             }
 
@@ -153,17 +128,17 @@ void Board::capture_piece( Tile* &old_piece, Tile* &new_piece )
 
 Tile* Board::get_board_tile(int x, int y)
 {
-	return board_tiles[x][y];
+	return board_tiles[y]->get_tile(x);
 }
 
 Tile* Board::get_piece_tile(int x, int y)
 {
-	return piece_tiles[x][y];
+	return piece_tiles[y]->get_tile(x);
 }
 
 Tile* Board::get_possible_moves(int x, int y)
 {
-	return possible_moves[x][y];
+	return possible_moves[y]->get_tile(x);
 }
 
 Tile* Board::get_selected_tile()
@@ -213,7 +188,7 @@ int Board::get_tile_count(int type)
 
 	for ( int i = 0 ; i < this->width ; i++ )
 		for ( int j = 0 ; j < this->height ; j++ )
-			if ( this->piece_tiles[i][j]->get_type() == type ) count ++;
+			if ( this->get_piece_tile(i,j)->get_type() == type ) count ++;
 
 	return count;
 

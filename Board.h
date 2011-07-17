@@ -2,6 +2,7 @@
 #define BOARD_H
 
 #include "Settings.h"
+#include "Row.h"
 #include "Tile.h"
 #include <vector>
 
@@ -13,9 +14,9 @@ class Board
 		int height;
 		Tile* selected_tile;
 		Tile* chosen_tile;
-		vector< vector<Tile*> > board_tiles;
-		vector< vector<Tile*> > piece_tiles;
-		vector< vector<Tile*> > possible_moves;
+		vector< Row* > board_tiles;
+		vector< Row* > piece_tiles;
+		vector< Row* > possible_moves;
 		Settings* settings;
 
 	public:
