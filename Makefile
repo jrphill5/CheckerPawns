@@ -5,16 +5,19 @@ PROJECT=CheckerPawns
 all: main.o Settings.o Tile.o Board.o
 	$(CXX) $(CXXFLAGS) main.o Settings.o Tile.o Board.o -o $(PROJECT)
 
-main.o: main.cpp globals.h
+main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
 
 Settings.o: Settings.cpp Settings.h
 	$(CXX) $(CXXFLAGS) -c Settings.cpp -o Settings.o
 
-Tile.o: Tile.cpp Tile.h globals.h
+Tile.o: Tile.cpp Tile.h
 	$(CXX) $(CXXFLAGS) -c Tile.cpp -o Tile.o
 
-Board.o: Board.cpp Board.h globals.h
+Row.o: Row.cpp Row.h
+	$(CXX) $(CXXFLAGS) -c Row.cpp -o Row.o
+
+Board.o: Board.cpp Board.h
 	$(CXX) $(CXXFLAGS) -c Board.cpp -o Board.o
 
 clean:
