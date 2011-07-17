@@ -35,6 +35,7 @@ class Board
 		void select_tile(int x, int y);
 		void choose_tile(int x, int y);
 		int get_tile_count(int type);
+		bool check_winner();
 
 };
 

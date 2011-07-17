@@ -218,3 +218,16 @@ int Board::get_tile_count(int type)
 	return count;
 
 }
+
+bool Board::check_winner()
+{
+
+	if ( get_tile_count( TILE_RED ) + get_tile_count( TILE_RED_KING ) == 0 )
+	{ cout << "Green Wins!" << "\n"; return true; }
+
+	if ( get_tile_count( TILE_GREEN ) + get_tile_count( TILE_GREEN_KING ) == 0 )
+	{ cout << "Red Wins!" << "\n"; return true; }
+
+	return false;
+
+}
