@@ -40,6 +40,8 @@ class Board
 		bool check_winner();
 		void set_jump_moves( int color, int captured_xindex, int captured_yindex, int move_xindex, int move_yindex );
 		void move_cursor( int direction );
+		void choose_tile();
+		void set_possible_moves( Tile* &chosen_piece );
 
 };
 
