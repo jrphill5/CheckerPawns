@@ -160,18 +160,11 @@ void choose_tile( Board* board )
     int old_type;
     int new_type;
 
-	cout << "lol" << endl;
-	int xcoord = board->get_chosen_tile()->get_xcoord();
-	cout << xcoord << endl;
-	int ycoord = board->get_chosen_tile()->get_ycoord();
-	cout << ycoord << endl;
-	Tile* old_chosen_piece = board->get_piece_tile( xcoord, ycoord );
-	cout << "lol" << endl;
+	Tile* old_chosen_piece = board->get_piece_tile( board->get_chosen_tile()->get_xcoord(), board->get_chosen_tile()->get_ycoord() );
 	Tile* new_chosen_piece = board->get_piece_tile( board->get_selected_tile()->get_xcoord(), board->get_selected_tile()->get_ycoord() );
-	cout << "lol" << endl;
 
-    if ( old_chosen_piece != NULL ) old_type = old_chosen_piece->get_type();
-    if ( new_chosen_piece != NULL ) new_type = new_chosen_piece->get_type();
+    if ( old_chosen_piece ) old_type = old_chosen_piece->get_type();
+    if ( new_chosen_piece ) new_type = new_chosen_piece->get_type();
 
     board->get_chosen_tile()->set_coords( new_chosen_piece->get_xcoord(), new_chosen_piece->get_ycoord() );
 
@@ -179,7 +172,7 @@ void choose_tile( Board* board )
 	{
 
 		board->clear_possible_moves();
-        if ( old_chosen_piece != NULL && old_chosen_piece->equals( new_chosen_piece ) )
+        if ( old_chosen_piece && old_chosen_piece->equals( new_chosen_piece ) )
             board->get_chosen_tile()->unset();
         else
             set_possible_moves( board, new_chosen_piece );
@@ -191,7 +184,7 @@ void choose_tile( Board* board )
 		if ( board->get_possible_moves( new_chosen_piece->get_xcoord(), new_chosen_piece->get_ycoord() )->get_type() != TILE_NONE )
 		{
 
-			if ( old_chosen_piece != NULL )
+			if ( old_chosen_piece )
 			{
 		
 				board->clear_possible_moves();
