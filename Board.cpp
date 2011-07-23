@@ -1,4 +1,3 @@
-#include <SDL/SDL.h>
 #include "Board.h"
 
 Board::Board( int width, int height )
@@ -128,17 +127,23 @@ void Board::capture_piece( Tile* &old_piece, Tile* &new_piece )
 
 Tile* Board::get_board_tile(int x, int y)
 {
-	return board_tiles[y]->get_tile(x);
+	if ( ( x >= 0 && x < width ) && ( y >= 0 && y < height ) )
+		return board_tiles[y]->get_tile(x);
+	else return NULL;
 }
 
 Tile* Board::get_piece_tile(int x, int y)
 {
-	return piece_tiles[y]->get_tile(x);
+	if ( ( x >= 0 && x < width ) && ( y >= 0 && y < height ) )
+		return piece_tiles[y]->get_tile(x);
+	else return NULL;
 }
 
 Tile* Board::get_possible_moves(int x, int y)
 {
-	return possible_moves[y]->get_tile(x);
+	if ( ( x >= 0 && x < width ) && ( y >= 0 && y < height ) )
+		return possible_moves[y]->get_tile(x);
+	else return NULL;
 }
 
 Tile* Board::get_selected_tile()
@@ -204,5 +209,48 @@ bool Board::check_winner()
 	{ cout << "Red Wins!" << "\n"; return true; }
 
 	return false;
+
+}
+
+void Board::set_jump_moves( int color, int captured_xindex, int captured_yindex, int move_xindex, int move_yindex )
+{
+
+	int old_type = get_piece_tile( captured_xindex, captured_yindex )->get_type();
+	int new_type = get_piece_tile( move_xindex, move_yindex )->get_type();
+	
+	if ( ( move_xindex != -1 && move_yindex != -1 ) &&
+	   ( ( old_type == ( ( color == TILE_RED ) ? TILE_GREEN : TILE_RED ) ) ||
+		 ( old_type == ( ( color == TILE_RED ) ? TILE_GREEN_KING : TILE_RED_KING ) ) ) &&
+		 ( new_type == TILE_NONE ) )
+		get_possible_moves(move_xindex,move_yindex)->set_type( ( color == TILE_RED ) ? TILE_RED_POSSIBLE : TILE_GREEN_POSSIBLE );
+
+}
+
+void Board::move_cursor( int direction )
+{
+
+    get_selected_tile()->set_type( TILE_NONE );
+
+    int xcoord = get_selected_tile()->get_xcoord();
+    int ycoord = get_selected_tile()->get_ycoord();
+
+    switch ( direction )
+    {
+
+        case DIRECTION_UP:    if ( ycoord > 0 )					ycoord--; break;
+        case DIRECTION_DOWN:  if ( ycoord < get_height()-1 )	ycoord++; break;
+        case DIRECTION_LEFT:  if ( xcoord > 0 )					xcoord--; break;
+        case DIRECTION_RIGHT: if ( xcoord < get_width()-1 )		xcoord++; break;
+
+    }
+
+	get_selected_tile()->set_coords( xcoord, ycoord );
+
+	Tile* selected_board = get_board_tile( xcoord, ycoord );
+
+    if ( selected_board->get_type() == TILE_BLACK )
+        get_selected_tile()->set_type( TILE_BLACK_SELECTED );
+    else if ( selected_board->get_type() == TILE_WHITE )
+        get_selected_tile()->set_type( TILE_WHITE_SELECTED );
 
 }

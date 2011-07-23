@@ -1,8 +1,8 @@
 #ifndef TILE_H
 #define TILE_H
 
+#include <SDL/SDL.h>
 #include "Settings.h"
-#include <vector>
 
 enum tiles_t
 {

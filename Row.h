@@ -1,6 +1,7 @@
 #ifndef ROW_H
 #define ROW_H
 
+#include <SDL/SDL.h>
 #include "Settings.h"
 #include "Tile.h"
 #include <vector>

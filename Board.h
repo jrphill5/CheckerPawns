@@ -1,8 +1,10 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <SDL/SDL.h>
 #include "Settings.h"
 #include "Row.h"
+#include "Tile.h"
 #include <vector>
 
 class Board
@@ -36,6 +38,8 @@ class Board
 		void choose_tile(int x, int y);
 		int get_tile_count(int type);
 		bool check_winner();
+		void set_jump_moves( int color, int captured_xindex, int captured_yindex, int move_xindex, int move_yindex );
+		void move_cursor( int direction );
 
 };
 

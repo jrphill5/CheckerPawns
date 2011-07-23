@@ -1,4 +1,3 @@
-#include <SDL/SDL.h>
 #include "Row.h"
 
 Row::Row( int ycoord, int size, int type )
