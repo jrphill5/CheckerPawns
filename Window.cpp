@@ -100,6 +100,22 @@ void Window::clip_tiles()
 
 }
 
+bool Window::update()
+{
+	if ( SDL_Flip( get_screen() ) == -1 )
+	{
+		cout << "Failed to update the screen!" << endl;
+		return false;
+	}
+	else return true;
+}
+
+void Window::clean()
+{
+	SDL_FreeSurface( screen );
+	SDL_FreeSurface( tileset );
+}
+
 SDL_Surface* Window::get_screen()
 {
 	return screen;

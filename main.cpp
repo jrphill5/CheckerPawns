@@ -1,7 +1,4 @@
 #include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <iostream>
-#include <string>
 #include "Board.h"
 #include "Settings.h"
 #include "Window.h"
@@ -10,20 +7,19 @@ using namespace std;
 
 Settings* settings = Settings::CreateInstance();
 Window* window = Window::CreateInstance();
-SDL_Event event;
 
 int main ( int argc, char* args[] )
 {
 
+	Board* board = new Board( settings->retrieve("BOARD_WIDTH"), settings->retrieve("BOARD_HEIGHT") );
+
     bool quit = false;
-
-	Board* board = new Board(        settings->retrieve("BOARD_WIDTH"),          settings->retrieve("BOARD_HEIGHT"));
-	cout << "Board Size:        " << settings->retrieve("BOARD_WIDTH") << "x" << settings->retrieve("BOARD_HEIGHT") << "\n";
-	cout << "Player Rows:       " << settings->retrieve("PIECE_ROWS") << "\n";
-
     while ( !quit )
     {
+
+		SDL_Event event;
 		int direction = DIRECTION_NONE;
+
         while ( SDL_PollEvent( &event ) )
         {
             if ( event.type == SDL_QUIT ) quit = true;
@@ -42,17 +38,15 @@ int main ( int argc, char* args[] )
                 }
             }
         }
-		if ( direction != DIRECTION_NONE ) board->move_cursor( direction );
+
+		board->move_cursor( direction );
         board->show();
-        if ( SDL_Flip( window->get_screen() ) == -1 )
-		{ cout << "Failed to update the screen!" << "\n"; return 2; }
+        if ( !window->update() ) return 1;
 		if ( board->check_winner() ) return 0;
     }
 
-    SDL_FreeSurface( window->get_tileset() );
-    SDL_FreeSurface( window->get_screen() );
-
 	board->clean();
+    window->clean();
 
     SDL_Quit();
 

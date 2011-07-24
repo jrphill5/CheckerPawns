@@ -19,8 +19,8 @@ class Window
 		Window& operator=(Window const&){};
 		static Window* pInstance;
 		Settings* settings;
-		SDL_Surface *screen;
-		SDL_Surface *tileset;
+		SDL_Surface* screen;
+		SDL_Surface* tileset;
 		vector<SDL_Rect> sprites;
 		bool init_screen();
 		SDL_Surface* load_image( string filename );
@@ -31,6 +31,8 @@ class Window
 		SDL_Surface* get_screen();
 		SDL_Surface* get_tileset();
 		vector<SDL_Rect> get_sprites();
+		bool update();
+		void clean();
 
 };
 

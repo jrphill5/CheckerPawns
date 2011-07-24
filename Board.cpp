@@ -14,6 +14,9 @@ Board::Board( int width, int height )
 
 	this->reset();
 
+	cout << "Board Size:        " << settings->retrieve("BOARD_WIDTH") << "x" << settings->retrieve("BOARD_HEIGHT") << "\n";
+	cout << "Player Rows:       " << settings->retrieve("PIECE_ROWS") << "\n";
+
 }
 
 void Board::reset()
