@@ -3,6 +3,7 @@
 
 #include <SDL/SDL.h>
 #include "Settings.h"
+#include "Window.h"
 
 enum tiles_t
 {
@@ -30,10 +31,11 @@ class Tile
         int xcoord;
         int ycoord;
 		Settings* settings;
+		Window* window;
 
     public:
         Tile( int x, int y, int tile_type );
-		void show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips);
+		void show();
         void set_type( int type );
         int get_type();
 		void set_xcoord( int xcoord );

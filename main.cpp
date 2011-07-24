@@ -44,7 +44,6 @@ int main ( int argc, char* args[] )
         }
 		if ( direction != DIRECTION_NONE ) board->move_cursor( direction );
         board->show();
-        board->get_selected_tile()->show(window->get_tileset(), window->get_screen(), window->get_sprites());
         if ( SDL_Flip( window->get_screen() ) == -1 )
 		{ cout << "Failed to update the screen!" << "\n"; return 2; }
 		if ( board->check_winner() ) return 0;

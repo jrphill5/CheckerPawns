@@ -3,7 +3,6 @@
 
 #include <SDL/SDL.h>
 #include "Settings.h"
-#include "Window.h"
 #include "Row.h"
 #include "Tile.h"
 #include <vector>
@@ -20,7 +19,6 @@ class Board
 		vector< Row* > piece_tiles;
 		vector< Row* > possible_moves;
 		Settings* settings;
-		Window* window;
 
 	public:
 		Board(int width, int height);

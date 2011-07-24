@@ -4,13 +4,18 @@ Tile::Tile( int x, int y, int tile_type )
 {
 
 	settings = Settings::CreateInstance();
+	window = Window::CreateInstance();
 	xcoord = x; ycoord = y;
     set_type(tile_type);
 
 }
 
-void Tile::show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips)
+void Tile::show()
 {
+
+	SDL_Surface* tileset   = window->get_tileset();
+	SDL_Surface* screen    = window->get_screen();
+	vector<SDL_Rect> clips = window->get_sprites();
 
 	SDL_Rect offset;
 	offset.x = xcoord * settings->retrieve("TILE_WIDTH");

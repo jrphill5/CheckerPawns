@@ -32,9 +32,9 @@ Tile* Row::get_tile( int index )
 	return tiles[ index ];
 }
 
-void Row::show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips)
+void Row::show()
 {
 	for ( int i = 0 ; i < this->size ; i++ )
-		tiles[i]->show(tileset, screen, clips);
+		tiles[i]->show();
 }
 
