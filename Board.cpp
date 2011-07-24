@@ -215,20 +215,6 @@ bool Board::check_winner()
 
 }
 
-void Board::set_jump_moves( int color, int captured_xindex, int captured_yindex, int move_xindex, int move_yindex )
-{
-
-	int old_type = get_piece_tile( captured_xindex, captured_yindex )->get_type();
-	int new_type = get_piece_tile( move_xindex, move_yindex )->get_type();
-	
-	if ( ( move_xindex != -1 && move_yindex != -1 ) &&
-	   ( ( old_type == ( ( color == TILE_RED ) ? TILE_GREEN : TILE_RED ) ) ||
-		 ( old_type == ( ( color == TILE_RED ) ? TILE_GREEN_KING : TILE_RED_KING ) ) ) &&
-		 ( new_type == TILE_NONE ) )
-		get_possible_moves(move_xindex,move_yindex)->set_type( ( color == TILE_RED ) ? TILE_RED_POSSIBLE : TILE_GREEN_POSSIBLE );
-
-}
-
 void Board::move_cursor( int direction )
 {
 
@@ -279,7 +265,7 @@ void Board::choose_tile()
         if ( old_chosen_piece && old_chosen_piece->equals( new_chosen_piece ) )
             get_chosen_tile()->unset();
         else
-            set_possible_moves( new_chosen_piece );
+            set_possible_moves();
 
 	}
 	else
@@ -316,91 +302,188 @@ void Board::choose_tile()
 
 }
 
-void Board::set_possible_moves( Tile* &chosen_piece )
+void Board::set_possible_moves()
 {
 
-    int type   = chosen_piece->get_type();
 	int width  = get_width();
 	int height = get_height();
-    int xcoord = chosen_piece->get_xcoord();
-    int ycoord = chosen_piece->get_ycoord();
-	int movement[4][2][2];
+    int xcoord = chosen_tile->get_xcoord();
+    int ycoord = chosen_tile->get_ycoord();
+    int type   = get_piece_tile( xcoord, ycoord )->get_type();
 
-	// normal moves
-	if ( xcoord > 0 && ycoord > 0 )					{ movement[0][0][0] = xcoord-1; /*left*/	movement[0][0][1] = ycoord-1; /*up*/ }
-	else											{ movement[0][0][0] = -1;					movement[0][0][1] = -1; }
-	if ( xcoord < width-1 && ycoord > 0 )			{ movement[1][0][0] = xcoord+1; /*right*/	movement[1][0][1] = ycoord-1; /*up*/ }
-	else											{ movement[1][0][0] = -1;					movement[1][0][1] = -1; }
-	if ( xcoord > 0 && ycoord < height-1 )			{ movement[2][0][0] = xcoord-1; /*left*/	movement[2][0][1] = ycoord+1; /*down*/ }
-	else											{ movement[2][0][0] = -1;					movement[2][0][1] = -1; }
-	if ( xcoord < width-1 && ycoord < height-1 )	{ movement[3][0][0] = xcoord+1; /*right*/	movement[3][0][1] = ycoord+1; /*down*/ }
-	else											{ movement[3][0][0] = -1;					movement[3][0][1] = -1; }
+	Tile* topleft     = get_piece_tile( xcoord-1, ycoord-1 );
+	Tile* topright    = get_piece_tile( xcoord+1, ycoord-1 );
+	Tile* bottomleft  = get_piece_tile( xcoord-1, ycoord+1 );
+	Tile* bottomright = get_piece_tile( xcoord+1, ycoord+1 );
 
-	// jump moves
-	if ( xcoord > 1 && ycoord > 1 )					{ movement[0][1][0] = xcoord-2; /*left*/	movement[0][1][1] = ycoord-2; /*up*/ }
-	else											{ movement[0][1][0] = -1;					movement[0][1][1] = -1; }
-	if ( xcoord < width-2 && ycoord > 1 )			{ movement[1][1][0] = xcoord+2; /*right*/	movement[1][1][1] = ycoord-2; /*up*/ }
-	else											{ movement[1][1][0] = -1;					movement[1][1][1] = -1; }
-	if ( xcoord > 1 && ycoord < height-2 )			{ movement[2][1][0] = xcoord-2; /*left*/	movement[2][1][1] = ycoord+2; /*down*/ }
-	else											{ movement[2][1][0] = -1;					movement[2][1][1] = -1; }
-	if ( xcoord < width-2 && ycoord < height-2 )	{ movement[3][1][0] = xcoord+2; /*right*/	movement[3][1][1] = ycoord+2; /*down*/ }
-	else											{ movement[3][1][0] = -1;					movement[3][1][1] = -1; }
+	int toplefttype     = ( topleft )     ? topleft->get_type()     : TILE_INVALID;
+	int toprighttype    = ( topright )    ? topright->get_type()    : TILE_INVALID;
+	int bottomlefttype  = ( bottomleft )  ? bottomleft->get_type()  : TILE_INVALID;
+	int bottomrighttype = ( bottomright ) ? bottomright->get_type() : TILE_INVALID;
 
-    if ( ( type == TILE_RED ) || ( type == TILE_RED_KING ) )
-    {
+	switch ( type )
+	{
+		case TILE_RED_KING:
+			if ( bottomlefttype == TILE_NONE )
+				get_possible_moves( bottomleft->get_xcoord(), bottomleft->get_ycoord() )->set_type( TILE_RED_POSSIBLE );
+			if ( bottomrighttype == TILE_NONE )
+				get_possible_moves( bottomright->get_xcoord(), bottomright->get_ycoord() )->set_type( TILE_RED_POSSIBLE );
+		case TILE_RED:
+			get_chosen_tile()->set_type( TILE_RED_SELECTED );
+			if ( toplefttype == TILE_NONE )
+				get_possible_moves( topleft->get_xcoord(), topleft->get_ycoord() )->set_type( TILE_RED_POSSIBLE );
+			if ( toprighttype == TILE_NONE )
+				get_possible_moves( topright->get_xcoord(), topright->get_ycoord() )->set_type( TILE_RED_POSSIBLE );
+			break;
+		case TILE_GREEN_KING:
+			if ( toplefttype == TILE_NONE )
+				get_possible_moves( topleft->get_xcoord(), topleft->get_ycoord() )->set_type( TILE_GREEN_POSSIBLE );
+			if ( toprighttype == TILE_NONE )
+				get_possible_moves( topright->get_xcoord(), topright->get_ycoord() )->set_type( TILE_GREEN_POSSIBLE );
+		case TILE_GREEN:
+			get_chosen_tile()->set_type( TILE_GREEN_SELECTED );
+			if ( bottomlefttype == TILE_NONE )
+				get_possible_moves( bottomleft->get_xcoord(), bottomleft->get_ycoord() )->set_type( TILE_GREEN_POSSIBLE );
+			if ( bottomrighttype == TILE_NONE )
+				get_possible_moves( bottomright->get_xcoord(), bottomright->get_ycoord() )->set_type( TILE_GREEN_POSSIBLE );
+			break;
+	}
 
-        get_chosen_tile()->set_type( TILE_RED_SELECTED );
+	set_jump_moves( xcoord, ycoord, type );
 
-		for ( int i = 0 ; i <= 3 ; i++ )
-		{
+}
 
-			int normal_move_x = movement[i][0][0];
-			int normal_move_y = movement[i][0][1];
-			int jump_move_x   = movement[i][1][0];
-			int jump_move_y   = movement[i][1][1];
+void Board::set_jump_moves( int xcoord, int ycoord, int type )
+{
 
-			if ( ( chosen_piece->get_type() == TILE_RED ) && ( i == 2 ) ) break;
+	Tile* tile = NULL;
 
-			if ( normal_move_x != -1 && normal_move_y != -1 )
+	Tile* topleft     = get_piece_tile( xcoord-1, ycoord-1 );
+	Tile* topright    = get_piece_tile( xcoord+1, ycoord-1 );
+	Tile* bottomleft  = get_piece_tile( xcoord-1, ycoord+1 );
+	Tile* bottomright = get_piece_tile( xcoord+1, ycoord+1 );
+
+	Tile* topleft2     = get_piece_tile( xcoord-2, ycoord-2 );
+	Tile* topright2    = get_piece_tile( xcoord+2, ycoord-2 );
+	Tile* bottomleft2  = get_piece_tile( xcoord-2, ycoord+2 );
+	Tile* bottomright2 = get_piece_tile( xcoord+2, ycoord+2 );
+
+	int toplefttype     = ( topleft )     ? topleft->get_type()     : TILE_INVALID;
+	int toprighttype    = ( topright )    ? topright->get_type()    : TILE_INVALID;
+	int bottomlefttype  = ( bottomleft )  ? bottomleft->get_type()  : TILE_INVALID;
+	int bottomrighttype = ( bottomright ) ? bottomright->get_type() : TILE_INVALID;
+
+	int topleft2type     = ( topleft2 )     ? topleft2->get_type()     : TILE_INVALID;
+	int topright2type    = ( topright2 )    ? topright2->get_type()    : TILE_INVALID;
+	int bottomleft2type  = ( bottomleft2 )  ? bottomleft2->get_type()  : TILE_INVALID;
+	int bottomright2type = ( bottomright2 ) ? bottomright2->get_type() : TILE_INVALID;
+
+	switch ( type )
+	{
+
+		case TILE_RED_KING:
+			if ( ( bottomlefttype == TILE_GREEN || bottomlefttype == TILE_GREEN_KING ) && bottomleft2type == TILE_NONE )
 			{
-
-				if ( jump_move_x != -1 && jump_move_y != -1 )
-					set_jump_moves( TILE_RED, normal_move_x, normal_move_y, jump_move_x, jump_move_y );
-				if ( get_piece_tile(      normal_move_x, normal_move_y )->get_type() == TILE_NONE )
-					get_possible_moves(  normal_move_x, normal_move_y )->set_type( TILE_RED_POSSIBLE );
-
+				tile = get_possible_moves( xcoord-2, ycoord+2 );
+				if ( tile )
+				{
+					if ( tile->get_type() != TILE_RED_POSSIBLE )
+					{
+						tile->set_type( TILE_RED_POSSIBLE );
+						set_jump_moves( xcoord-2, ycoord+2, type );
+					}
+				}
 			}
-
-        }
-
-    }
-    else if ( ( type == TILE_GREEN ) || ( type == TILE_GREEN_KING ) )
-    {
-
-        get_chosen_tile()->set_type( TILE_GREEN_SELECTED );
-
-		for ( int i = 3 ; i >= 0 ; i-- )
-		{
-
-			int normal_move_x = movement[i][0][0];
-			int normal_move_y = movement[i][0][1];
-			int jump_move_x   = movement[i][1][0];
-			int jump_move_y   = movement[i][1][1];
-
-			if ( normal_move_x != -1 && normal_move_y != -1 )
+			if ( ( bottomrighttype == TILE_GREEN || bottomrighttype == TILE_GREEN_KING ) && bottomright2type == TILE_NONE )
 			{
-
-				if ( jump_move_x != -1 && jump_move_y != -1 )
-					set_jump_moves( TILE_GREEN, normal_move_x, normal_move_y, jump_move_x, jump_move_y );
-				if ( get_piece_tile(        normal_move_x, normal_move_y )->get_type() == TILE_NONE )
-					get_possible_moves(    normal_move_x, normal_move_y )->set_type( TILE_GREEN_POSSIBLE );
-
+				tile = get_possible_moves( xcoord+2, ycoord+2 );
+				if ( tile )
+				{
+					if ( tile->get_type() != TILE_RED_POSSIBLE )
+					{
+						tile->set_type( TILE_RED_POSSIBLE );
+						set_jump_moves( xcoord+2, ycoord+2, type );
+					}
+				}
 			}
-			
-			if ( ( chosen_piece->get_type() == TILE_GREEN ) && ( i == 2 ) ) break;
+		case TILE_RED:
+			if ( ( toplefttype == TILE_GREEN || toplefttype == TILE_GREEN_KING ) && topleft2type == TILE_NONE )
+			{
+				tile = get_possible_moves( xcoord-2, ycoord-2 );
+				if ( tile )
+				{
+					if ( tile->get_type() != TILE_RED_POSSIBLE )
+					{
+						tile->set_type( TILE_RED_POSSIBLE );
+						set_jump_moves( xcoord-2, ycoord-2, type );
+					}
+				}
+			}
+			if ( ( toprighttype == TILE_GREEN || toprighttype == TILE_GREEN_KING ) && topright2type == TILE_NONE )
+			{
+				tile = get_possible_moves( xcoord+2, ycoord-2 );
+				if ( tile )
+				{
+					if ( tile->get_type() != TILE_RED_POSSIBLE )
+					{
+						tile->set_type( TILE_RED_POSSIBLE );
+						set_jump_moves( xcoord+2, ycoord-2, type );
+					}
+				}
+			}
+			break;
+		case TILE_GREEN_KING:
+			if ( ( toplefttype == TILE_RED || toplefttype == TILE_RED_KING ) && topleft2type == TILE_NONE )
+			{
+				tile = get_possible_moves( xcoord-2, ycoord-2 );
+				if ( tile )
+				{
+					if ( tile->get_type() != TILE_GREEN_POSSIBLE )
+					{
+						tile->set_type( TILE_GREEN_POSSIBLE );
+						set_jump_moves( xcoord-2, ycoord-2, type );
+					}
+				}
+			}
+			if ( ( toprighttype == TILE_RED || toprighttype == TILE_RED_KING ) && topright2type == TILE_NONE )
+			{
+				tile = get_possible_moves( xcoord+2, ycoord-2 );
+				if ( tile )
+				{
+					if ( tile->get_type() != TILE_GREEN_POSSIBLE )
+					{
+						tile->set_type( TILE_GREEN_POSSIBLE );
+						set_jump_moves( xcoord+2, ycoord-2, type );
+					}
+				}
+			}
+		case TILE_GREEN:
+			if ( ( bottomlefttype == TILE_RED || bottomlefttype == TILE_RED_KING ) && bottomleft2type == TILE_NONE )
+			{
+				tile = get_possible_moves( xcoord-2, ycoord+2 );
+				if ( tile )
+				{
+					if ( tile->get_type() != TILE_GREEN_POSSIBLE )
+					{
+						tile->set_type( TILE_GREEN_POSSIBLE );
+						set_jump_moves( xcoord-2, ycoord+2, type );
+					}
+				}	
+			}
+			if ( ( bottomrighttype == TILE_RED || bottomrighttype == TILE_RED_KING ) && bottomright2type == TILE_NONE )
+			{
+				tile = get_possible_moves( xcoord+2, ycoord+2 );
+				if ( tile )
+				{
+					if ( tile->get_type() != TILE_GREEN_POSSIBLE )
+					{
+						tile->set_type( TILE_GREEN_POSSIBLE );
+						set_jump_moves( xcoord+2, ycoord+2, type );
+					}
+				}
+			}
+			break;
 
-        }
-
-    }
+	}
 
 }

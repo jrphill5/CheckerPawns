@@ -5,6 +5,7 @@
 #include "Settings.h"
 #include "Row.h"
 #include "Tile.h"
+#include <iostream>
 #include <vector>
 
 class Board
@@ -38,10 +39,10 @@ class Board
 		void choose_tile(int x, int y);
 		int get_tile_count(int type);
 		bool check_winner();
-		void set_jump_moves( int color, int captured_xindex, int captured_yindex, int move_xindex, int move_yindex );
 		void move_cursor( int direction );
 		void choose_tile();
-		void set_possible_moves( Tile* &chosen_piece );
+		void set_possible_moves();
+		void set_jump_moves( int xcoord, int ycoord, int type );
 
 };
 
