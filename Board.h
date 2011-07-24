@@ -3,6 +3,7 @@
 
 #include <SDL/SDL.h>
 #include "Settings.h"
+#include "Window.h"
 #include "Row.h"
 #include "Tile.h"
 #include <vector>
@@ -19,13 +20,14 @@ class Board
 		vector< Row* > piece_tiles;
 		vector< Row* > possible_moves;
 		Settings* settings;
+		Window* window;
 
 	public:
 		Board(int width, int height);
 		void clear_possible_moves();
 		void reset();
 		void clean();
-		void show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips);
+		void show();
 		void capture_piece( Tile* &old_piece, Tile* &new_piece );
 		int get_width();
 		int get_height();

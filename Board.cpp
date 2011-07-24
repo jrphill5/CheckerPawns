@@ -4,6 +4,7 @@ Board::Board( int width, int height )
 {
 
 	settings = Settings::CreateInstance();
+	window = Window::CreateInstance();
 
 	this->width = width;
 	this->height = height;
@@ -60,8 +61,13 @@ void Board::clean()
 	delete chosen_tile;
 }
 
-void Board::show(SDL_Surface* tileset, SDL_Surface* screen, vector<SDL_Rect> clips)
+void Board::show()
 {
+
+	SDL_Surface* tileset   = window->get_tileset();
+	SDL_Surface* screen    = window->get_screen();
+	vector<SDL_Rect> clips = window->get_sprites();
+
 	for ( int i = 0 ; i < this->height ; i++ )
 	{
 		board_tiles[i]->show(tileset, screen, clips);
