@@ -1,0 +1,1 @@
+check number of tiles*tilesize vs screen resolution to prevent segfaults
